@@ -1,9 +1,9 @@
-from src.adapters.scrapers.imdb_scraper import IMDBScraper
+from src.adapters.scrapers.tmdb_scraper import TMDBScraper
 
 
 class ScraperFactory:
     scrapers = {
-        "imdb": IMDBScraper,
+        "tmdb": TMDBScraper,
         # "rottentomatoes": RottenTomatoesScraper
     }
 

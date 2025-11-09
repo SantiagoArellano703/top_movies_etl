@@ -1,26 +1,27 @@
 from fastapi import APIRouter
+from fastapi.responses import FileResponse
+
 from src.adapters.api.models.DownloadRequest import DownloadRequest
 from src.adapters.factory.scraper_factory import ScraperFactory
 from src.core.application.uses_cases.extract_movies import ExtractMoviesUseCase
+from src.core.application.uses_cases.transform_movies import TransformMoviesUseCase # NOQA
+from src.core.application.transformers.movie_transformer import MovieTransformer # NOQA
+from src.core.application.uses_cases.export_movies import ExportMoviesUseCase
+from src.core.application.exporters.exportCSV import ExportCSV
 
 router = APIRouter()
 
 
 @router.post("/download")
 def download_movies(request: DownloadRequest):
-    # Crear scraper y exporter usando factories
-    # scraper = ScraperFactory.create(request.platform)
-    # exporter = ExporterFactory.create(request.format)
+    scraper_factory = ScraperFactory()
+    scraper = scraper_factory.get_scraper(request.platform)
+    extract_use_case = ExtractMoviesUseCase(scraper)
+    data = extract_use_case.execute(limit=request.limit)
 
-    # # Crear caso de uso
-    # use_case = DownloadMoviesUseCase(scraper, exporter)
+    transform_use_case = TransformMoviesUseCase(MovieTransformer())
+    cleaned_data = transform_use_case.execute(data)
 
-    # # Ejecutar el flujo ETL
-    # file_path = use_case.execute(limit=request.limit)
-
-    # return {"message": f"Archivo generado: {file_path}"}}
-    factory = ScraperFactory()
-    scraper = factory.get_scraper(request.platform)
-    use_case = ExtractMoviesUseCase(scraper)
-    data = use_case.execute()
-    return {"message": f"Archivo generado: {data}"}
+    export_use_case = ExportMoviesUseCase(ExportCSV())
+    file_path = export_use_case.execute(cleaned_data, "tmp/top_movies.csv")
+    return FileResponse(path=file_path, filename="movies.csv")
