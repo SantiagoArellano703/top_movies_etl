@@ -23,5 +23,5 @@ def download_movies(request: DownloadRequest):
     cleaned_data = transform_use_case.execute(data)
 
     export_use_case = ExportMoviesUseCase(ExportCSV())
-    file_path = export_use_case.execute(cleaned_data, "tmp/top_movies.csv")
+    file_path = export_use_case.execute(cleaned_data, "top_movies.csv")
     return FileResponse(path=file_path, filename="movies.csv")
