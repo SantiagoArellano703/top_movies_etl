@@ -2,7 +2,7 @@
 
 Este proyecto es un servicio web ETL (Extracción, Transformación y Carga) construido con FastAPI. Su propósito es extraer datos de películas desde una plataforma, transformarlos a un formato limpio y consistente, y exportarlos como un archivo CSV.
 
-## 🌟 Características
+## Características
 
 - **Extracción de Datos**: Obtiene datos de películas desde diferentes fuentes.
 - **Transformación de Datos**: Limpia y estandariza la información extraída.
@@ -10,21 +10,12 @@ Este proyecto es un servicio web ETL (Extracción, Transformación y Carga) cons
 - **Arquitectura Hexagonal**: La lógica de negocio está desacoplada de los servicios externos.
 - **API Sencilla**: Un único endpoint para iniciar todo el proceso.
 
-## 🏗️ Arquitectura
+## Arquitectura
 
 El proyecto sigue los principios de la **Arquitectura Hexagonal** (también conocida como Puertos y Adaptadores). Esto permite una clara separación de responsabilidades:
 
 - **`src/core`**: Contiene la lógica de negocio pura (dominio y casos de uso), sin dependencias de frameworks o servicios externos.
 - **`src/adapters`**: Contiene las implementaciones concretas que interactúan con el mundo exterior (API, scrapers, exportadores).
-
-## 🚀 Cómo Empezar
-
-Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local.
-
-### Prerrequisitos
-
-- Python 3.8 o superior
-- pip
 
 ### Instalación
 
@@ -34,51 +25,44 @@ Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local.
    cd movies_etl
    ```
 
-2. (Opcional pero recomendado) Crea y activa un entorno virtual:
+2. Crea la imagen de docker:
    ```bash
-   python -m venv venv
-   # En Windows
-   venv\Scripts\activate
-   # En macOS/Linux
-   source venv/bin/activate
-   ```
-
-3. Instala las dependencias:
-   ```bash
-   pip install -r requirements.txt
+   docker build -t movies-etl .
    ```
 
 ### Ejecución
 
-1. Inicia el servidor de desarrollo:
+1. Ejecuta el contenedor para iniciar el servidor::
    ```bash
-   uvicorn src.app:app --reload
+   docker run -p 8000:8000 movies-etl
    ```
    El servidor estará disponible en `http://127.0.0.1:8000`.
 
-## 🔌 API Endpoints
+## API Endpoints
 
 La aplicación expone un único endpoint para controlar el proceso ETL.
 
-### `POST /download`
+### `POST /api/top-movies/export`
 
-Inicia el proceso de extracción, transformación y exportación de datos de películas.
+Inicia el proceso de extracción, transformación y exportación de datos del top de películas.
 
 **Request Body:**
 
 ```json
 {
   "platform": "tmdb",
-  "limit": 100
+  "output_filename": "top_movies",
+  "limit": 50
 }
 ```
 
 - `platform` (str): La plataforma desde la cual extraer los datos. Actualmente, `"tmdb"` es una opción soportada.
+- `output_filename` (str): Nombre del archivo de salida.
 - `limit` (int): El número de películas a procesar.
 
 **Respuesta Exitosa:**
 
 - **Código**: `200 OK`
-- **Body**: El endpoint devuelve un archivo `movies.csv` para descargar, que contiene los datos de las películas procesadas.
+- **Body**: Archivo CSV descargable con los datos procesados.
 
 Puedes acceder a la documentación interactiva de la API (generada por Swagger UI) en `http://127.0.0.1:8000/docs` para probar el endpoint directamente desde tu navegador.
