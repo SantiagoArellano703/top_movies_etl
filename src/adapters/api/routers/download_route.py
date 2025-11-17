@@ -8,12 +8,13 @@ from src.core.application.uses_cases.transform_movies import TransformMoviesUseC
 from src.core.application.transformers.movie_transformer import MovieTransformer # NOQA
 from src.core.application.uses_cases.export_movies import ExportMoviesUseCase
 from src.core.application.exporters.exportCSV import ExportCSV
+from src.config.settings import OUTPUT_EXT, OUTPUT_PATH
 
 router = APIRouter()
 
 
-@router.post("/download")
-def download_movies(request: DownloadRequest):
+@router.post("/api/top-movies/export")
+def download_movies(request: DownloadRequest) -> FileResponse:
     scraper_factory = ScraperFactory()
     scraper = scraper_factory.get_scraper(request.platform)
     extract_use_case = ExtractMoviesUseCase(scraper)
@@ -23,5 +24,11 @@ def download_movies(request: DownloadRequest):
     cleaned_data = transform_use_case.execute(data)
 
     export_use_case = ExportMoviesUseCase(ExportCSV())
-    file_path = export_use_case.execute(cleaned_data, "top_movies.csv")
-    return FileResponse(path=file_path, filename="movies.csv")
+    file_path = OUTPUT_PATH / f"top_movies{OUTPUT_EXT}"
+    file_path_out = export_use_case.execute(cleaned_data, file_path)
+    file_name = request.output_filename + OUTPUT_EXT
+
+    return FileResponse(
+        path=file_path_out,
+        filename=file_name
+    )
