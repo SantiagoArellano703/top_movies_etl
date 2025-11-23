@@ -10,10 +10,10 @@ from src.core.application.uses_cases.export_movies import ExportMoviesUseCase
 from src.adapters.exporters.exportCSV import ExportCSV
 from src.config.settings import OUTPUT_EXT, OUTPUT_PATH
 
-router = APIRouter()
+router = APIRouter(prefix="/api", tags=["api"])
 
 
-@router.post("/api/top-movies/export")
+@router.post("/top-movies/export")
 def download_movies(request: DownloadRequest) -> FileResponse:
     scraper_factory = ScraperFactory()
     scraper = scraper_factory.get_scraper(request.platform)
