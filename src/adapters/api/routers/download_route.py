@@ -7,7 +7,7 @@ from src.core.application.uses_cases.extract_movies import ExtractMoviesUseCase
 from src.core.application.uses_cases.transform_movies import TransformMoviesUseCase # NOQA
 from src.core.application.transformers.movie_transformer import MovieTransformer # NOQA
 from src.core.application.uses_cases.export_movies import ExportMoviesUseCase
-from src.core.application.exporters.exportCSV import ExportCSV
+from src.adapters.exporters.exportCSV import ExportCSV
 from src.config.settings import OUTPUT_EXT, OUTPUT_PATH
 
 router = APIRouter()
