@@ -7,4 +7,6 @@ class Ratings:
         if not 0 <= value <= scale:
             raise ValueError(f"The rating must be between 0 and {scale}")
 
-        return (value / scale) * 10
+        normalized_value = (value / scale) * 10
+        normalized_value = round(normalized_value, 1)
+        return normalized_value
