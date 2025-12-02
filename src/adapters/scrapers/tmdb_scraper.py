@@ -46,7 +46,7 @@ class TMDBScraper(ScraperPort):
             movies.append({
                 'title': title,
                 'rating': rating,
-                'year':  date,
+                'year': date,
                 'platform': 'tmdb'
             })
 
