@@ -1,16 +1,19 @@
-name: Test
+name: Tests
 
 on: [push, pull_request]
 
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v4
     
     - name: Build Docker image
       run: docker build -t movies-etl .
+    
+    - name: Check styles flake8
+      run: docker run --rm movies-etl flake8 src tests --select=E,W,F
     
     - name: Run tests
       run: docker run --rm movies-etl pytest -v
