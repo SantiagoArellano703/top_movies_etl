@@ -1,6 +1,9 @@
 import requests
+import logging
 from bs4 import BeautifulSoup
 from src.core.domain.ports.scraper_port import ScraperPort
+
+logger = logging.getLogger(__name__)
 
 
 class TMDBScraper(ScraperPort):
@@ -28,6 +31,7 @@ class TMDBScraper(ScraperPort):
             limit -= len(movies_extract)
             page += 1
 
+        logger.info(f"Extracted {len(movies_json)} movies.")
         return movies_json
 
     def get_elements_page(self, url: str, page: int):
