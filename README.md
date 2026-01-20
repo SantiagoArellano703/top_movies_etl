@@ -42,7 +42,7 @@ El proyecto sigue los principios de la **Arquitectura Hexagonal** (también cono
 
 La aplicación expone un único endpoint para controlar el proceso ETL.
 
-### `POST /api/top-movies/export`
+### `POST /api/top-movies/download`
 
 Inicia el proceso de extracción, transformación y exportación de datos del top de películas.
 
