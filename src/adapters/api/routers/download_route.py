@@ -1,4 +1,5 @@
 import logging
+import uuid
 from fastapi import APIRouter
 from fastapi.responses import FileResponse
 from fastapi import HTTPException
@@ -17,7 +18,7 @@ def download_movies(request: DownloadRequest) -> FileResponse:
     try:
         scraper = ScraperFactory.get_scraper(request.platform)
         use_case = DownloadUseCase(scraper)
-        file_path = OUTPUT_PATH / f"top_movies{OUTPUT_EXT}"
+        file_path = OUTPUT_PATH / f"top_movies_{uuid.uuid4()}{OUTPUT_EXT}"
         output_filepath = use_case.execute(
             limit=request.limit,
             file_path=file_path
