@@ -9,6 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 class DownloadUseCase:
+    MIN_LIMIT = 1
+    MAX_LIMIT = 1000
+
     def __init__(
         self,
         scraper: ScraperPort,
@@ -20,9 +23,7 @@ class DownloadUseCase:
         self.exporter = exporter
 
     def execute(self, limit: int, file_path: str):
-        if limit <= 0:
-            raise ValueError(f"Limit must be positive, got {limit}")
-
+        self.validate_limit(limit)
         raw_movies = self.scraper.extract_data(limit=limit)
         logger.info(f"Extracted {len(raw_movies)} movies")
         cleaned_data = self.transformer.transform(raw_movies)
@@ -30,3 +31,9 @@ class DownloadUseCase:
         output_filepath = self.exporter.export_data(cleaned_data, file_path)
         logger.info(f"Exported data to {file_path}")
         return output_filepath
+
+    def validate_limit(self, limit):
+        if limit < self.MIN_LIMIT:
+            raise ValueError(f"Limit must be at least {self.MIN_LIMIT}, got {limit}") # NOQA
+        if limit > self.MAX_LIMIT:
+            raise ValueError(f"Limit must be at most {self.MAX_LIMIT}, got {limit}") # NOQA
