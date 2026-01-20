@@ -1,6 +1,6 @@
 from typing import List, Dict
 from src.core.domain.entities.movie import Movie
-from src.core.application.transformers.base_transformer import Transformer # NOQA
+from src.core.application.transformers.transformer import Transformer # NOQA
 
 
 class TransformMoviesUseCase:

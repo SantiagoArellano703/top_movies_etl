@@ -1,4 +1,5 @@
 import logging
+from src.core.domain.ports.scraper_port import ScraperPort
 from src.adapters.scrapers.tmdb_scraper import TMDBScraper
 
 logger = logging.getLogger(__name__)
@@ -10,7 +11,8 @@ class ScraperFactory:
         # "rottentomatoes": RottenTomatoesScraper
     }
 
-    def get_scraper(self, platform: str):
+    @staticmethod
+    def get_scraper(platform: str) -> ScraperPort:
         scraper_class = ScraperFactory.scrapers.get(platform.lower())
         if not scraper_class:
             raise ValueError(f"Unknown platform: {platform}")

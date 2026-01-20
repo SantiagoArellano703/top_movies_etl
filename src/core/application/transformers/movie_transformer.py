@@ -1,7 +1,7 @@
 import re
 from typing import List, Dict
 
-from .base_transformer import Transformer
+from .transformer import Transformer
 from src.core.domain.entities.movie import Movie
 from src.core.domain.value_objects.ratings import Ratings
 from src.core.application.utils.ratings_values import RATINGS_VALUES
