@@ -2,8 +2,6 @@ import logging
 from src.core.domain.ports.export_port import ExportPort
 from src.core.domain.ports.scraper_port import ScraperPort
 from src.core.application.transformers.transformer import Transformer # NOQA
-from src.core.application.transformers.movie_transformer import MovieTransformer # NOQA
-from src.adapters.exporters.exportCSV import ExportCSV
 
 logger = logging.getLogger(__name__)
 
@@ -15,8 +13,8 @@ class DownloadUseCase:
     def __init__(
         self,
         scraper: ScraperPort,
-        transformer: Transformer = MovieTransformer(),
-        exporter: ExportPort = ExportCSV()
+        transformer: Transformer,
+        exporter: ExportPort
     ):
         self.scraper = scraper
         self.transformer = transformer
