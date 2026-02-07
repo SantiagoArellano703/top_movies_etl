@@ -4,20 +4,22 @@ from typing import List, Dict
 from .transformer import Transformer
 from src.core.domain.entities.movie import Movie
 from src.core.domain.value_objects.ratings import Ratings
-from src.core.application.utils.ratings_values import RATINGS_VALUES
+from src.core.domain.value_objects.platform import Platform
+# from src.core.application.utils.ratings_values import RATINGS_VALUES
 
-RATING_DEFAULT = RATINGS_VALUES.get("default")
-PLATFORM_DEFAULT = "tmdb"
+# RATING_DEFAULT = RATINGS_VALUES.get("default")
+# PLATFORM_DEFAULT = "tmdb"
 
 
 class MovieTransformer(Transformer):
-    def transform(self, raw_movies: List[Dict]) -> List[Movie]: # NOQA
+    def transform(self, raw_movies: List[Dict], platform: Platform) -> List[Movie]: # NOQA
         movies = []
 
         for raw_movie in raw_movies:
             try:
                 movie = self._transform_single_movie(
-                    raw_movie=raw_movie
+                    raw_movie=raw_movie,
+                    platform=platform
                 )
                 movies.append(movie)
             except Exception as e:
@@ -27,22 +29,21 @@ class MovieTransformer(Transformer):
         return movies
 
     def _transform_single_movie(
-            self, raw_movie: Dict
+            self, raw_movie: Dict, platform: Platform
         ) -> Movie: # NOQA
         clean_title = self._clean_title(raw_movie.get('title', ''))
         clean_year = self._parse_year(raw_movie.get('year', ''))
         clean_rating = self._parse_rating(raw_movie.get('rating', ''))
-        platform = raw_movie.get('platform', PLATFORM_DEFAULT)
         rating_normalized = Ratings.normalize(
             value=clean_rating,
-            scale=RATINGS_VALUES.get(platform, RATING_DEFAULT)
+            scale=platform.scale
         )
 
         return Movie(
             title=clean_title,
             year=clean_year,
             rating=rating_normalized,
-            platform=platform
+            platform=platform.name
         )
 
     def _clean_title(self, title: str) -> str:

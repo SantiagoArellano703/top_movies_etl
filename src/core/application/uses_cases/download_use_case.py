@@ -2,6 +2,7 @@ import logging
 from src.core.domain.ports.export_port import ExportPort
 from src.core.domain.ports.scraper_port import ScraperPort
 from src.core.application.transformers.transformer import Transformer # NOQA
+from src.core.domain.value_objects.platform import Platform
 
 logger = logging.getLogger(__name__)
 
@@ -14,17 +15,19 @@ class DownloadUseCase:
         self,
         scraper: ScraperPort,
         transformer: Transformer,
-        exporter: ExportPort
+        exporter: ExportPort,
+        platform: Platform
     ):
         self.scraper = scraper
         self.transformer = transformer
         self.exporter = exporter
+        self.platform = platform
 
     def execute(self, limit: int, file_path: str):
         self.validate_limit(limit)
         raw_movies = self.scraper.extract_data(limit=limit)
         logger.info(f"Extracted {len(raw_movies)} movies")
-        cleaned_data = self.transformer.transform(raw_movies)
+        cleaned_data = self.transformer.transform(raw_movies, self.platform)
         logger.info("Transformed data, ready to export")
         output_filepath = self.exporter.export_data(cleaned_data, file_path)
         logger.info(f"Exported data to {file_path}")

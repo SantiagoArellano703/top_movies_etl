@@ -6,6 +6,7 @@ from fastapi import HTTPException
 
 from src.adapters.api.models.DownloadRequest import DownloadRequest
 from src.adapters.factory.scraper_factory import ScraperFactory
+from src.core.domain.value_objects.platform import Platform
 from src.core.application.uses_cases.download_use_case import DownloadUseCase
 from src.core.application.transformers.movie_transformer import MovieTransformer # NOQA
 from src.adapters.exporters.exportCSV import ExportCSV
@@ -18,8 +19,14 @@ logger = logging.getLogger(__name__)
 @router.post("/top-movies/download")
 def download_movies(request: DownloadRequest) -> FileResponse:
     try:
-        scraper = ScraperFactory.get_scraper(request.platform)
-        use_case = DownloadUseCase(scraper, MovieTransformer(), ExportCSV())
+        platform = Platform.from_key(request.platform)
+        scraper = ScraperFactory.get_scraper(platform)
+        use_case = DownloadUseCase(
+            scraper=scraper,
+            platform=platform,
+            transformer=MovieTransformer(),
+            exporter=ExportCSV()
+        )
         file_path = OUTPUT_PATH / f"top_movies_{uuid.uuid4()}{OUTPUT_EXT}"
         output_filepath = use_case.execute(
             limit=request.limit,
