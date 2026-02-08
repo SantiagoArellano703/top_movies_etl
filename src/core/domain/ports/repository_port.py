@@ -5,21 +5,21 @@ from typing import List
 
 class MovieRepositoryPort(ABC):
     @abstractmethod
-    def save_movie(self, movie: Movie, **kwargs):
+    def save_movie(self, movie: Movie):
         pass
 
     @abstractmethod
-    def get_movie_by_id(self, id: int, **kwargs) -> Movie:
+    def get_movie_by_id(self, id: int) -> Movie:
         pass
 
     @abstractmethod
-    def update_movie(self, id: int, **kwargs):
+    def update_movie(self, id: int):
         pass
 
     @abstractmethod
-    def delete_movie(self, id: int, **kwargs):
+    def delete_movie(self, id: int):
         pass
 
     @abstractmethod
-    def list_movies(self, **kwargs) -> List[Movie]:
+    def list_movies(self, limit: int | None = None) -> List[Movie]:
         pass
