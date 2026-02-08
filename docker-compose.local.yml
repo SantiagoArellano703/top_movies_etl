@@ -1,0 +1,29 @@
+name: movies-etl
+
+services:
+  api:
+    user: "root"
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+    command: uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=movie_user
+      - POSTGRES_PASSWORD=movie_password
+      - POSTGRES_DB=movie_db
+
+volumes:
+  db-data: {}
