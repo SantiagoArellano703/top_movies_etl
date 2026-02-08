@@ -20,10 +20,8 @@ services:
       - "5433:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=movie_user
-      - POSTGRES_PASSWORD=movie_password
-      - POSTGRES_DB=movie_db
+    env_file:
+      - .env
 
 volumes:
   db-data: {}

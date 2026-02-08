@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-DATABASE_URL = "postgresql+psycopg2://movie_user:movie_password@db:5432/movie_db" # NOQA
+from src.config.db import DATABASE_URL
 
 engine = create_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(
